@@ -32,7 +32,33 @@ if OPERATION_STATUS == True:
     soup = BeautifulSoup(page.content, "html.parser")
     page_content = soup.find('tbody', class_='lister-list').findAll('tr')
     names = []
+    years = []
+    rating = []
+    all_movies = []
+
     for movie in page_content:
-        name = movie.find('td', class_='titleColumn').a.text
-        names.append(name)
-    print(names)
+        placeholder_movie = {
+            "Name":"",
+            "Year":"",
+            "Rating":"",
+        }
+        try:
+            name = movie.find('td', class_='titleColumn').a.text
+            placeholder_movie["Name"] = name
+        except AttributeError:
+            placeholder_movie["Name"] = ("No name avaliable")
+        
+        try:
+            year = movie.find('td', class_='titleColumn').span.text
+            placeholder_movie['Year'] = year
+        except AttributeError:
+            placeholder_movie["Year"] = ("No release date")
+        
+        try:
+            rating = movie.find('td', class_='ratingColumn imdbRating').strong.text
+            placeholder_movie["Rating"] = (rating)
+        except AttributeError:
+            placeholder_movie["Rating"] = ("-")
+        
+        all_movies.append(placeholder_movie)
+print(all_movies)
