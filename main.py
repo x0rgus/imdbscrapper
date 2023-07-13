@@ -11,9 +11,7 @@ user_agents_list = [
 HEADERS = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
 URL = "https://www.imdb.com/chart/moviemeter/"
 page = requests.get(URL, headers=HEADERS)
-
 OPERATION_STATUS = False
-page = requests.get(URL, headers=HEADERS)
 
 match page.status_code:
     case 200:
@@ -23,14 +21,17 @@ match page.status_code:
         if page.status_code == 200:
             OPERATION_STATUS = True
         else:
-            print("failed to get page")
+            raise Exception("Failed to get page")
+            quit()
     case _:
-        print("Failed to get page")
+        raise Exception("Failed to get page")
+        quit()
 
 
 if OPERATION_STATUS == True:
     soup = BeautifulSoup(page.content, "html.parser")
-    page_content = soup.find('tbody', class_='lister-list').findAll('tr')
+    print(soup.text)
+    page_content = soup.find('ul', class_='ipc-metadata-list-summary-item sc-bca49391-0 eypSaE cli-parent').findAll('li')
     names = []
     years = []
     rating = []
@@ -62,3 +63,5 @@ if OPERATION_STATUS == True:
         
         all_movies.append(placeholder_movie)
 print(all_movies)
+
+# TODO add posters and links
